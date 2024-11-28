@@ -67,17 +67,29 @@ pipeline {
 
         stage('Run Docker Container') {
             steps {
-                sh '''
-                echo "Checking for existing container..."
-                CONTAINER_ID=$(docker ps -aq -f name=${CONTAINER_NAME})
-                if [ ! -z "$CONTAINER_ID" ]; then
-                    echo "Stopping and removing existing container..."
-                    docker stop ${CONTAINER_NAME} || true
-                    docker rm -f ${CONTAINER_NAME} || true
-                fi
-                echo "Running the new container..."
-                docker run -d --name ${CONTAINER_NAME} -p ${APP_PORT}:${APP_PORT} ${IMAGE_NAME}
-                '''
+                script {
+                    try {
+                        echo "Checking for existing container..."
+                        // Check for existing container (both running and stopped)
+                        def containerId = sh(
+                            script: "docker ps -aq -f name=uzinterfax_web_1",
+                            returnStdout: true
+                        ).trim()
+
+                        if (containerId) {
+                            echo "Stopping and removing existing container..."
+                            sh "docker stop uzinterfax_web_1 || true"
+                            sh "docker rm -f uzinterfax_web_1 || true"
+                        }
+
+                        echo "Running the new container..."
+                        sh "docker run -d --name uzinterfax_web_1 -p 8000:8000 uzinterfax_web"
+                    } catch (Exception e) {
+                        echo "Error running Docker container: ${e.getMessage()}"
+                        currentBuild.result = 'FAILURE'
+                        error("Failed to run the Docker container. See logs for details.")
+                    }
+                }
             }
         }
 
