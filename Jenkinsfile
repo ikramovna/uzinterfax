@@ -9,11 +9,23 @@ pipeline {
             }
         }
 
+        stage('Setup Virtual Environment') {
+            steps {
+                sh '''
+                echo "Setting up virtual environment..."
+                python3 -m venv .venv
+                source .venv/bin/activate
+                pip install --upgrade pip
+                pip install -r requirements.txt
+                '''
+            }
+        }
+
         stage('Lint') {
             steps {
-                // Run linting with pylint
                 sh '''
                 echo "Running linting with pylint..."
+                source .venv/bin/activate
                 pylint main/
                 '''
             }
@@ -21,9 +33,9 @@ pipeline {
 
         stage('Security Scan') {
             steps {
-                // Run security analysis with bandit
                 sh '''
                 echo "Running security scan with bandit..."
+                source .venv/bin/activate
                 bandit -r main/
                 '''
             }
@@ -31,9 +43,9 @@ pipeline {
 
         stage('Test') {
             steps {
-                // Run tests and generate coverage report
                 sh '''
                 echo "Running tests with pytest..."
+                source .venv/bin/activate
                 pytest --cov=main
                 '''
             }
@@ -41,7 +53,6 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                // Build your Django application's Docker image
                 sh '''
                 echo "Building Docker image..."
                 docker build -t uzinterfax_web .
@@ -51,7 +62,6 @@ pipeline {
 
         stage('Run Docker Container') {
             steps {
-                // Stop and remove any running or stopped container with the same name
                 sh '''
                 echo "Checking for existing container..."
 
@@ -76,7 +86,6 @@ pipeline {
 
         stage('Run Tests in Container') {
             steps {
-                // Run Django tests inside the container
                 sh '''
                 echo "Running tests inside the container..."
                 docker exec uzinterfax_web_1 python manage.py test
@@ -86,7 +95,6 @@ pipeline {
 
         stage('Static File Collection') {
             steps {
-                // Collect static files for deployment
                 sh '''
                 echo "Collecting static files..."
                 docker exec uzinterfax_web_1 python manage.py collectstatic --noinput
@@ -96,7 +104,6 @@ pipeline {
 
         stage('Clean Up') {
             steps {
-                // Stop and remove the container after tests
                 sh '''
                 echo "Cleaning up container..."
                 docker stop uzinterfax_web_1 || true
