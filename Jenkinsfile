@@ -67,19 +67,19 @@ pipeline {
             steps {
                 sh '''
                 echo "Checking for existing container..."
-                if [ "$(docker ps -q -f name=uzinterfax_web_1)" ]; then
+                CONTAINER_ID=$(docker ps -q -f name=uzinterfax_web_1)
+                if [ ! -z "$CONTAINER_ID" ]; then
                     echo "Stopping existing container..."
                     docker stop uzinterfax_web_1 || true
+                    echo "Removing existing container..."
+                    docker rm -f uzinterfax_web_1 || true
                 fi
-
-                echo "Removing existing container if it exists..."
-                docker rm uzinterfax_web_1 || true
-
                 echo "Running the new container..."
                 docker run -d --name uzinterfax_web_1 -p 8000:8000 uzinterfax_web
                 '''
             }
         }
+
 
 
         stage('Run Tests in Container') {
