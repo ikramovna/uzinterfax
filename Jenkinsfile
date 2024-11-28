@@ -11,19 +11,31 @@ pipeline {
 
         stage('Lint') {
             steps {
-                sh 'pylint main/'
+                // Run linting with pylint
+                sh '''
+                echo "Running linting with pylint..."
+                pylint main/
+                '''
             }
         }
 
         stage('Security Scan') {
             steps {
-                sh 'bandit -r main/'
+                // Run security analysis with bandit
+                sh '''
+                echo "Running security scan with bandit..."
+                bandit -r main/
+                '''
             }
         }
 
         stage('Test') {
             steps {
-                sh 'pytest --cov=main'
+                // Run tests and generate coverage report
+                sh '''
+                echo "Running tests with pytest..."
+                pytest --cov=main
+                '''
             }
         }
 
@@ -32,7 +44,7 @@ pipeline {
                 // Build your Django application's Docker image
                 sh '''
                 echo "Building Docker image..."
-                sudo docker build -t uzinterfax_web .
+                docker build -t uzinterfax_web .
                 '''
             }
         }
@@ -44,20 +56,20 @@ pipeline {
                 echo "Checking for existing container..."
 
                 # Stop the container if it's running
-                if [ "$(sudo docker ps -q -f name=uzinterfax_web_1)" ]; then
+                if [ "$(docker ps -q -f name=uzinterfax_web_1)" ]; then
                     echo "Stopping existing container..."
-                    sudo docker stop uzinterfax_web_1
+                    docker stop uzinterfax_web_1
                 fi
 
                 # Remove the container if it exists
-                if [ "$(sudo docker ps -aq -f name=uzinterfax_web_1)" ]; then
+                if [ "$(docker ps -aq -f name=uzinterfax_web_1)" ]; then
                     echo "Removing existing container..."
-                    sudo docker rm uzinterfax_web_1
+                    docker rm uzinterfax_web_1
                 fi
 
                 # Run a new container
                 echo "Starting a new container..."
-                sudo docker run -d --name uzinterfax_web_1 -p 8000:8000 uzinterfax_web
+                docker run -d --name uzinterfax_web_1 -p 8000:8000 uzinterfax_web
                 '''
             }
         }
@@ -67,7 +79,7 @@ pipeline {
                 // Run Django tests inside the container
                 sh '''
                 echo "Running tests inside the container..."
-                sudo docker exec uzinterfax_web_1 python manage.py test
+                docker exec uzinterfax_web_1 python manage.py test
                 '''
             }
         }
@@ -77,7 +89,7 @@ pipeline {
                 // Collect static files for deployment
                 sh '''
                 echo "Collecting static files..."
-                sudo docker exec uzinterfax_web_1 python manage.py collectstatic --noinput
+                docker exec uzinterfax_web_1 python manage.py collectstatic --noinput
                 '''
             }
         }
@@ -87,8 +99,8 @@ pipeline {
                 // Stop and remove the container after tests
                 sh '''
                 echo "Cleaning up container..."
-                sudo docker stop uzinterfax_web_1 || true
-                sudo docker rm uzinterfax_web_1 || true
+                docker stop uzinterfax_web_1 || true
+                docker rm uzinterfax_web_1 || true
                 '''
             }
         }
