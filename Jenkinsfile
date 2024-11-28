@@ -23,13 +23,13 @@ pipeline {
             }
         }
         stage('Deploy') {
-            steps {
-                script {
-                    dockerImage.push()
-                    sh 'docker-compose up -d'
-                }
-            }
+    steps {
+        script {
+            sh 'docker-compose -f docker-compose.prod.yml up -d'
         }
+    }
+}
+
     }
     post {
         always {
