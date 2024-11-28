@@ -22,14 +22,16 @@ pipeline {
 }
 
         stage('Lint') {
-            steps {
-                sh '''
-                echo "Running linting with pylint..."
-                source .venv/bin/activate
-                pylint main/
-                '''
-            }
-        }
+    steps {
+        sh '''
+        #!/bin/bash
+        echo "Running linting with pylint..."
+        source .venv/bin/activate
+        pylint main/
+        '''
+    }
+}
+
 
         stage('Security Scan') {
             steps {
