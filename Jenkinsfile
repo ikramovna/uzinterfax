@@ -18,31 +18,55 @@ pipeline {
 
         stage('Run Docker Container') {
             steps {
-                // Stop any running instance of the container
-                sh 'docker stop uzinterfax_web_1 || true && docker rm uzinterfax_web_1 || true'
-                // Run the container in detached mode
-                sh 'docker run -d --name uzinterfax_web_1 -p 8000:8000 uzinterfax_web'
+                // Stop and remove any running or stopped container with the same name
+                sh '''
+                # Stop the container if it's running
+                if [ "$(docker ps -q -f name=uzinterfax_web_1)" ]; then
+                    echo "Stopping existing container..."
+                    docker stop uzinterfax_web_1
+                fi
+
+                # Remove the container if it exists (even if stopped)
+                if [ "$(docker ps -aq -f name=uzinterfax_web_1)" ]; then
+                    echo "Removing existing container..."
+                    docker rm uzinterfax_web_1
+                fi
+
+                # Run a new container
+                echo "Starting a new container..."
+                docker run -d --name uzinterfax_web_1 -p 8000:8000 uzinterfax_web
+                '''
             }
         }
 
         stage('Run Tests') {
             steps {
                 // Run Django tests inside the container
-                sh 'docker exec uzinterfax_web_1 python manage.py test'
+                sh '''
+                echo "Running tests..."
+                docker exec uzinterfax_web_1 python manage.py test
+                '''
             }
         }
 
         stage('Static File Collection') {
             steps {
                 // Collect static files for deployment
-                sh 'docker exec uzinterfax_web_1 python manage.py collectstatic --noinput'
+                sh '''
+                echo "Collecting static files..."
+                docker exec uzinterfax_web_1 python manage.py collectstatic --noinput
+                '''
             }
         }
 
         stage('Clean Up') {
             steps {
                 // Stop and remove the container after tests
-                sh 'docker stop uzinterfax_web_1 && docker rm uzinterfax_web_1'
+                sh '''
+                echo "Cleaning up container..."
+                docker stop uzinterfax_web_1 || true
+                docker rm uzinterfax_web_1 || true
+                '''
             }
         }
     }
@@ -50,6 +74,7 @@ pipeline {
     post {
         always {
             // Clean up workspace
+            echo "Cleaning up workspace..."
             cleanWs()
         }
         success {
