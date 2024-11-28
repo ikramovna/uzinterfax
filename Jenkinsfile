@@ -68,31 +68,16 @@ pipeline {
         stage('Run Docker Container') {
             steps {
                 script {
-                    echo "Checking for existing container..."
-                    def containerId = sh(
-                        script: "docker ps -aq -f name=uzinterfax_web_1",
-                        returnStdout: true
-                    ).trim()
-
-                    if (containerId) {
-                        echo "Stopping and removing existing container..."
-                        sh """
-                        docker stop uzinterfax_web_1 || true
-                        docker rm -f uzinterfax_web_1 || true
-                        """
-                    }
-
+                    echo "Stopping and removing existing container..."
+                    sh '''
+                    sudo docker ps -aq -f name=uzinterfax_web_1 | xargs -r sudo docker stop || true
+                    sudo docker ps -aq -f name=uzinterfax_web_1 | xargs -r sudo docker rm || true
                     echo "Running the new container..."
-                    sh """
-                    docker run -d --name uzinterfax_web_1 -p 8000:8000 uzinterfax_web
-                    """
+                    sudo docker run -d --name uzinterfax_web_1 -p 8000:8000 uzinterfax_web
+                    '''
                 }
             }
         }
-
-
-
-
 
         stage('Run Tests in Container') {
             steps {
