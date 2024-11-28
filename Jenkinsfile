@@ -2,47 +2,44 @@ pipeline {
     agent any
 
     environment {
-        // Define reusable environment variables
         DOCKER_IMAGE = 'uzinterfax-app:latest'
+        DOCKER_FILE = './Dockerfile'
+        REPO_URL = 'https://github.com/ikramovna/uzinterfax.git'
     }
 
     stages {
         stage('Checkout') {
             steps {
-                // Fetch code from the repository
-                git branch: 'main', url: 'https://github.com/ikramovna/uzinterfax.git'
+                echo 'Checking out the code from Git'
+                git branch: 'main', url: "$REPO_URL"
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                // Build the Docker image
-                sh 'docker build -t $DOCKER_IMAGE .'
+                echo 'Building Docker Image'
+                sh 'docker build -t $DOCKER_IMAGE -f $DOCKER_FILE .'
             }
         }
 
         stage('Run Tests') {
             steps {
-                // Run tests using the Docker container
-                sh '''
-                docker run --rm $DOCKER_IMAGE bash -c "
-                python manage.py test
-                "
-                '''
+                echo 'Running tests inside the Docker container'
+                sh 'docker run --rm $DOCKER_IMAGE bash -c "python manage.py test"'
             }
         }
 
         stage('Deploy') {
             steps {
-                // Deploy to the production server (example placeholder)
-                echo 'Deploying the application...'
+                echo 'Deploying the application'
+                // Add deployment commands (e.g., SSH, Kubernetes, etc.)
             }
         }
     }
 
     post {
         always {
-            // Clean up workspace
+            echo 'Cleaning workspace'
             cleanWs()
         }
     }
