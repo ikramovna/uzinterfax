@@ -68,30 +68,28 @@ pipeline {
         stage('Run Docker Container') {
             steps {
                 script {
-                    try {
-                        echo "Checking for existing container..."
-                        // Check for existing container (both running and stopped)
-                        def containerId = sh(
-                            script: "docker ps -aq -f name=uzinterfax_web_1",
-                            returnStdout: true
-                        ).trim()
+                    echo "Checking for existing container..."
+                    def containerId = sh(
+                        script: "docker ps -aq -f name=uzinterfax_web_1",
+                        returnStdout: true
+                    ).trim()
 
-                        if (containerId) {
-                            echo "Stopping and removing existing container..."
-                            sh "docker stop uzinterfax_web_1 || true"
-                            sh "docker rm -f uzinterfax_web_1 || true"
-                        }
-
-                        echo "Running the new container..."
-                        sh "docker run -d --name uzinterfax_web_1 -p 8000:8000 uzinterfax_web"
-                    } catch (Exception e) {
-                        echo "Error running Docker container: ${e.getMessage()}"
-                        currentBuild.result = 'FAILURE'
-                        error("Failed to run the Docker container. See logs for details.")
+                    if (containerId) {
+                        echo "Stopping and removing existing container..."
+                        sh """
+                        docker stop uzinterfax_web_1 || true
+                        docker rm -f uzinterfax_web_1 || true
+                        """
                     }
+
+                    echo "Running the new container..."
+                    sh """
+                    docker run -d --name uzinterfax_web_1 -p 8000:8000 uzinterfax_web
+                    """
                 }
             }
         }
+
 
 
         stage('Run Tests in Container') {
