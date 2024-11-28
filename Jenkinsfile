@@ -9,6 +9,24 @@ pipeline {
             }
         }
 
+        stage('Lint') {
+            steps {
+                sh 'pylint main/'
+            }
+        }
+
+        stage('Security Scan') {
+            steps {
+                sh 'bandit -r main/'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh 'pytest --cov=main'
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 // Build your Django application's Docker image
@@ -44,7 +62,7 @@ pipeline {
             }
         }
 
-        stage('Run Tests') {
+        stage('Run Tests in Container') {
             steps {
                 // Run Django tests inside the container
                 sh '''
@@ -83,10 +101,10 @@ pipeline {
             cleanWs()
         }
         success {
-            echo 'Build, tests, and static file collection completed successfully!'
+            echo 'Linting, security scan, build, tests, and static file collection completed successfully!'
         }
         failure {
-            echo 'Build failed. Check the logs for details.'
+            echo 'Build or tests failed. Check the logs for details.'
         }
     }
 }

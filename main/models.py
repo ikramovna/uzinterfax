@@ -5,7 +5,7 @@ from django.utils.text import slugify
 
 class ZoneModel(models.Model):
     name = models.CharField(max_length=100)
-    slug = models.SlugField(max_length=300, blank=True)
+    slug = models.SlugField(max_length=300, blank=True, unique=True)
 
     class Meta:
         verbose_name = 'Zone'
@@ -18,26 +18,38 @@ class ZoneModel(models.Model):
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.name)
+            original_slug = self.slug
+            counter = 1
 
-            while NewsModel.objects.filter(slug=self.slug).exists():
-                slug = NewsModel.objects.filter(slug=self.slug).first().slug
-                if '-' in slug:
-                    try:
-                        if slug.split('-')[-1] in self.name:
-                            self.slug += '-1'
-                        else:
-                            self.slug = '-'.join(slug.split('-')[:-1]) + '-' + str(int(slug.split('-')[-1]) + 1)
-                    except:
-                        self.slug = slug + '-1'
-                else:
-                    self.slug += '-1'
+            while ZoneModel.objects.filter(slug=self.slug).exists():
+                self.slug = f"{original_slug}-{counter}"
+                counter += 1
 
-            super().save(*args, **kwargs)
+        super().save(*args, **kwargs)
+
+    # def save(self, *args, **kwargs):
+    #     if not self.slug:
+    #         self.slug = slugify(self.name)
+    #
+    #         while NewsModel.objects.filter(slug=self.slug).exists():
+    #             slug = NewsModel.objects.filter(slug=self.slug).first().slug
+    #             if '-' in slug:
+    #                 try:
+    #                     if slug.split('-')[-1] in self.name:
+    #                         self.slug += '-1'
+    #                     else:
+    #                         self.slug = '-'.join(slug.split('-')[:-1]) + '-' + str(int(slug.split('-')[-1]) + 1)
+    #                 except:
+    #                     self.slug = slug + '-1'
+    #             else:
+    #                 self.slug += '-1'
+    #
+    #         super().save(*args, **kwargs)
 
 
 class CategoryModel(models.Model):
     name = models.CharField(max_length=100)
-    slug = models.SlugField(max_length=300, blank=True)
+    slug = models.SlugField(max_length=300, blank=True, unique=True)
 
     class Meta:
         verbose_name = 'Category'
@@ -50,21 +62,33 @@ class CategoryModel(models.Model):
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.name)
+            original_slug = self.slug
+            counter = 1
 
-            while NewsModel.objects.filter(slug=self.slug).exists():
-                slug = NewsModel.objects.filter(slug=self.slug).first().slug
-                if '-' in slug:
-                    try:
-                        if slug.split('-')[-1] in self.name:
-                            self.slug += '-1'
-                        else:
-                            self.slug = '-'.join(slug.split('-')[:-1]) + '-' + str(int(slug.split('-')[-1]) + 1)
-                    except:
-                        self.slug = slug + '-1'
-                else:
-                    self.slug += '-1'
+            while CategoryModel.objects.filter(slug=self.slug).exists():
+                self.slug = f"{original_slug}-{counter}"
+                counter += 1
 
-            super().save(*args, **kwargs)
+        super().save(*args, **kwargs)
+
+    # def save(self, *args, **kwargs):
+    #     if not self.slug:
+    #         self.slug = slugify(self.name)
+    #
+    #         while NewsModel.objects.filter(slug=self.slug).exists():
+    #             slug = NewsModel.objects.filter(slug=self.slug).first().slug
+    #             if '-' in slug:
+    #                 try:
+    #                     if slug.split('-')[-1] in self.name:
+    #                         self.slug += '-1'
+    #                     else:
+    #                         self.slug = '-'.join(slug.split('-')[:-1]) + '-' + str(int(slug.split('-')[-1]) + 1)
+    #                 except:
+    #                     self.slug = slug + '-1'
+    #             else:
+    #                 self.slug += '-1'
+    #
+    #         super().save(*args, **kwargs)
 
 
 class NewsModel(models.Model):
@@ -84,26 +108,38 @@ class NewsModel(models.Model):
     is_ad = models.BooleanField(default=False)
     is_video_news = models.BooleanField(default=False)
     is_photo_news = models.BooleanField(default=False)
-    slug = models.SlugField(max_length=300, blank=True)
+    slug = models.SlugField(max_length=300, blank=True, unique=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.title)
+            original_slug = self.slug
+            counter = 1
 
             while NewsModel.objects.filter(slug=self.slug).exists():
-                slug = NewsModel.objects.filter(slug=self.slug).first().slug
-                if '-' in slug:
-                    try:
-                        if slug.split('-')[-1] in self.title:
-                            self.slug += '-1'
-                        else:
-                            self.slug = '-'.join(slug.split('-')[:-1]) + '-' + str(int(slug.split('-')[-1]) + 1)
-                    except:
-                        self.slug = slug + '-1'
-                else:
-                    self.slug += '-1'
+                self.slug = f"{original_slug}-{counter}"
+                counter += 1
 
-            super().save(*args, **kwargs)
+        super().save(*args, **kwargs)
+
+    # def save(self, *args, **kwargs):
+    #     if not self.slug:
+    #         self.slug = slugify(self.title)
+    #
+    #         while NewsModel.objects.filter(slug=self.slug).exists():
+    #             slug = NewsModel.objects.filter(slug=self.slug).first().slug
+    #             if '-' in slug:
+    #                 try:
+    #                     if slug.split('-')[-1] in self.title:
+    #                         self.slug += '-1'
+    #                     else:
+    #                         self.slug = '-'.join(slug.split('-')[:-1]) + '-' + str(int(slug.split('-')[-1]) + 1)
+    #                 except:
+    #                     self.slug = slug + '-1'
+    #             else:
+    #                 self.slug += '-1'
+    #
+    #         super().save(*args, **kwargs)
 
     class Meta:
         verbose_name = 'News'
@@ -117,8 +153,8 @@ class NewsModel(models.Model):
 
 class TagModel(models.Model):
     name = models.CharField(max_length=50)
-    news = models.ManyToManyField(NewsModel)
-    slug = models.SlugField(max_length=300, blank=True)
+    news = models.ManyToManyField(NewsModel, related_name="tags")
+    slug = models.SlugField(max_length=300, blank=True, unique=True)
 
     class Meta:
         verbose_name = 'Tag'
@@ -129,20 +165,34 @@ class TagModel(models.Model):
         return self.name
 
     def save(self, *args, **kwargs):
+        # Generate slug only if it doesn't exist
         if not self.slug:
             self.slug = slugify(self.name)
+            original_slug = self.slug
+            counter = 1
 
-            while NewsModel.objects.filter(slug=self.slug).exists():
-                slug = NewsModel.objects.filter(slug=self.slug).first().slug
-                if '-' in slug:
-                    try:
-                        if slug.split('-')[-1] in self.name:
-                            self.slug += '-1'
-                        else:
-                            self.slug = '-'.join(slug.split('-')[:-1]) + '-' + str(int(slug.split('-')[-1]) + 1)
-                    except:
-                        self.slug = slug + '-1'
-                else:
-                    self.slug += '-1'
+            # Ensure slug uniqueness within the TagModel
+            while TagModel.objects.filter(slug=self.slug).exists():
+                self.slug = f"{original_slug}-{counter}"
+                counter += 1
 
-            super().save(*args, **kwargs)
+        super().save(*args, **kwargs)
+
+    # def save(self, *args, **kwargs):
+    #     if not self.slug:
+    #         self.slug = slugify(self.name)
+    #
+    #         while NewsModel.objects.filter(slug=self.slug).exists():
+    #             slug = NewsModel.objects.filter(slug=self.slug).first().slug
+    #             if '-' in slug:
+    #                 try:
+    #                     if slug.split('-')[-1] in self.name:
+    #                         self.slug += '-1'
+    #                     else:
+    #                         self.slug = '-'.join(slug.split('-')[:-1]) + '-' + str(int(slug.split('-')[-1]) + 1)
+    #                 except:
+    #                     self.slug = slug + '-1'
+    #             else:
+    #                 self.slug += '-1'
+    #
+    #         super().save(*args, **kwargs)
