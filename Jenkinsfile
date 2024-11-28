@@ -26,10 +26,11 @@ pipeline {
                 sh '''
                 echo "Running linting with pylint..."
                 . .venv/bin/activate
-                pylint main/
+                pylint --rcfile=.pylintrc main/
                 '''
             }
-        }
+         }
+
 
 
         stage('Security Scan') {
