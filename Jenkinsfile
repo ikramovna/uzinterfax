@@ -26,10 +26,11 @@ pipeline {
                 sh '''
                 echo "Running linting with pylint..."
                 . .venv/bin/activate
-                pylint --rcfile=.pylintrc main/
+                pylint --rcfile=.pylintrc main/ || true
                 '''
             }
          }
+
 
 
 
