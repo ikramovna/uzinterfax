@@ -7,3 +7,5 @@ django-js-asset==2.1.0
 Pillow==10.0.0
 pytils==0.4.1
 sqlparse==0.4.4
+gunicorn==20.1.0
+redis==4.5.5

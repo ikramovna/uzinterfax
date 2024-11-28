@@ -4,7 +4,19 @@ services:
   web:
     build:
       context: .
+    container_name: uzinterfax_web_1
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
     ports:
       - "8000:8000"
     environment:
-      - DEBUG=0
+      DEBUG: "1"  # Enable debugging mode
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
