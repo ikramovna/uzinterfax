@@ -69,11 +69,10 @@ pipeline {
             steps {
                 sh '''
                 echo "Checking for existing container..."
-                CONTAINER_ID=$(docker ps -q -f name=${CONTAINER_NAME})
+                CONTAINER_ID=$(docker ps -aq -f name=${CONTAINER_NAME})
                 if [ ! -z "$CONTAINER_ID" ]; then
-                    echo "Stopping existing container..."
+                    echo "Stopping and removing existing container..."
                     docker stop ${CONTAINER_NAME} || true
-                    echo "Removing existing container..."
                     docker rm -f ${CONTAINER_NAME} || true
                 fi
                 echo "Running the new container..."
@@ -81,6 +80,7 @@ pipeline {
                 '''
             }
         }
+
 
         stage('Run Tests in Container') {
             steps {
