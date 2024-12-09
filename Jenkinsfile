@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         IMAGE_NAME = "uzinterfax_web"
-        CONTAINER_NAME = "uzinterfax_web_1"
+        CONTAINER_NAME = "uzinterfax_web_2"
         APP_PORT = "8000"
         DEPLOY_HOST = "164.92.243.52"
         REMOTE_USER = "root"
@@ -73,10 +73,10 @@ pipeline {
                 script {
                     echo "Stopping and removing existing container..."
                     sh '''
-                    sudo docker ps -aq -f name=uzinterfax_web_1 | xargs -r sudo docker stop || true
-                    sudo docker ps -aq -f name=uzinterfax_web_1 | xargs -r sudo docker rm || true
+                    sudo docker ps -aq -f name=uzinterfax_web_2 | xargs -r sudo docker stop || true
+                    sudo docker ps -aq -f name=uzinterfax_web_2 | xargs -r sudo docker rm || true
                     echo "Running the new container..."
-                    sudo docker run -d --name uzinterfax_web_1 -p 8000:8000 uzinterfax_web
+                    sudo docker run -d --name uzinterfax_web_2 -p 8000:8000 uzinterfax_web
                     '''
                 }
             }
