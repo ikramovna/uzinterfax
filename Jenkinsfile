@@ -22,7 +22,9 @@ pipeline {
                 sh '''
                 echo "Setting up virtual environment..."
                 python3 -m venv .venv
-                bash -c "source .venv/bin/activate && pip install --upgrade pip && pip install -r requirements.txt"
+                source .venv/bin/activate
+                pip install --upgrade pip
+                pip install -r requirements.txt
                 '''
             }
         }
@@ -31,7 +33,8 @@ pipeline {
             steps {
                 sh '''
                 echo "Running linting with pylint..."
-                bash -c "source .venv/bin/activate && pylint --rcfile=.pylintrc main/ || true"
+                source .venv/bin/activate
+                pylint --rcfile=.pylintrc main/ || true
                 '''
             }
         }
@@ -40,7 +43,8 @@ pipeline {
             steps {
                 sh '''
                 echo "Running security scan with bandit..."
-                bash -c "source .venv/bin/activate && bandit -r main/"
+                source .venv/bin/activate
+                bandit -r main/
                 '''
             }
         }
@@ -49,7 +53,8 @@ pipeline {
             steps {
                 sh '''
                 echo "Running tests with pytest..."
-                bash -c "source .venv/bin/activate && pytest --cov=main"
+                source .venv/bin/activate
+                pytest --cov=main
                 '''
             }
         }
@@ -66,7 +71,7 @@ pipeline {
         stage('Run Docker Container') {
             steps {
                 script {
-                    echo "Stopping and removing existing container..."
+                    echo "Stopping and removing existing container if it exists..."
                     sh '''
                     docker ps -aq -f name=${CONTAINER_NAME} | xargs -r docker stop || true
                     docker ps -aq -f name=${CONTAINER_NAME} | xargs -r docker rm || true
@@ -98,9 +103,9 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo "Deploying to remote server..."
-                sshagent(['my-ssh-key']) { // Replace 'my-ssh-key' with your Credential ID
+                sshagent(['my-ssh-password']) { // Replace 'my-ssh-key' with your Credential ID
                     sh '''
-                    ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${DEPLOY_HOST} << EOF
+                    ssh -tt -o StrictHostKeyChecking=no ${REMOTE_USER}@${DEPLOY_HOST} << EOF
                     docker ps -aq -f name=${CONTAINER_NAME} | xargs -r docker stop || true
                     docker ps -aq -f name=${CONTAINER_NAME} | xargs -r docker rm || true
                     docker pull ${IMAGE_NAME}
@@ -114,7 +119,7 @@ pipeline {
         stage('Clean Up') {
             steps {
                 sh '''
-                echo "Cleaning up container locally..."
+                echo "Cleaning up any leftover containers locally..."
                 docker ps -aq -f name=${CONTAINER_NAME} | xargs -r docker stop || true
                 docker ps -aq -f name=${CONTAINER_NAME} | xargs -r docker rm || true
                 '''
