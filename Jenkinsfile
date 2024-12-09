@@ -7,12 +7,12 @@ pipeline {
         APP_PORT = "8000"
         DEPLOY_HOST = "164.92.243.52"
         REMOTE_USER = "root"
-        SSH_KEY_PATH = "/path/to/your/private/key"
     }
 
     stages {
         stage('Checkout') {
             steps {
+                echo "Checking out the code..."
                 git branch: 'main', url: 'https://github.com/ikramovna/uzinterfax.git'
             }
         }
@@ -73,10 +73,10 @@ pipeline {
                 script {
                     echo "Stopping and removing existing container..."
                     sh '''
-                    sudo docker ps -aq -f name=uzinterfax_web_2 | xargs -r sudo docker stop || true
-                    sudo docker ps -aq -f name=uzinterfax_web_2 | xargs -r sudo docker rm || true
+                    docker ps -aq -f name=${CONTAINER_NAME} | xargs -r docker stop || true
+                    docker ps -aq -f name=${CONTAINER_NAME} | xargs -r docker rm || true
                     echo "Running the new container..."
-                    sudo docker run -d --name uzinterfax_web_2 -p 8000:8000 uzinterfax_web
+                    docker run -d --name ${CONTAINER_NAME} -p ${APP_PORT}:${APP_PORT} ${IMAGE_NAME}
                     '''
                 }
             }
@@ -100,28 +100,28 @@ pipeline {
             }
         }
 
-             stage('Deploy') {
-         steps {
-             echo "Deploying to remote server..."
-             sshagent(['credentialID']) {
-                 sh '''
-                 ssh ${REMOTE_USER}@${DEPLOY_HOST} '
-                     docker stop ${CONTAINER_NAME} || true
-                     docker rm ${CONTAINER_NAME} || true
-                     docker pull ${IMAGE_NAME}
-                     docker run -d --name ${CONTAINER_NAME} -p 8000:8000 ${IMAGE_NAME}
-                 '
-                 '''
-             }
-         }
-     }
+        stage('Deploy') {
+            steps {
+                echo "Deploying to remote server..."
+                sshagent(['my-ssh-key']) { // Replace 'my-ssh-key' with your credential ID
+                    sh '''
+                    ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${DEPLOY_HOST} '
+                        docker ps -aq -f name=${CONTAINER_NAME} | xargs -r docker stop || true
+                        docker ps -aq -f name=${CONTAINER_NAME} | xargs -r docker rm || true
+                        docker pull ${IMAGE_NAME}
+                        docker run -d --name ${CONTAINER_NAME} -p ${APP_PORT}:${APP_PORT} ${IMAGE_NAME}
+                    '
+                    '''
+                }
+            }
+        }
 
         stage('Clean Up') {
             steps {
                 sh '''
-                echo "Cleaning up container..."
-                docker stop ${CONTAINER_NAME} || true
-                docker rm ${CONTAINER_NAME} || true
+                echo "Cleaning up container locally..."
+                docker ps -aq -f name=${CONTAINER_NAME} | xargs -r docker stop || true
+                docker ps -aq -f name=${CONTAINER_NAME} | xargs -r docker rm || true
                 '''
             }
         }
@@ -133,10 +133,10 @@ pipeline {
             cleanWs()
         }
         success {
-            echo 'Pipeline completed successfully: linting, security scan, build, tests, static file collection, and deployment!'
+            echo "Pipeline completed successfully: linting, security scan, build, tests, static file collection, and deployment!"
         }
         failure {
-            echo 'Pipeline failed. Check the logs for details.'
+            echo "Pipeline failed. Check the logs for details."
         }
     }
 }
