@@ -103,18 +103,17 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo "Deploying to remote server..."
-                sshagent(['my-ssh-key']) { // Replace 'my-ssh-key' with your credential ID
+                sshagent(['my-ssh-key']) { // Replace 'my-ssh-key' with your Credential ID
                     sh '''
-                    ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${DEPLOY_HOST} '
-                        docker ps -aq -f name=${CONTAINER_NAME} | xargs -r docker stop || true
-                        docker ps -aq -f name=${CONTAINER_NAME} | xargs -r docker rm || true
-                        docker pull ${IMAGE_NAME}
-                        docker run -d --name ${CONTAINER_NAME} -p ${APP_PORT}:${APP_PORT} ${IMAGE_NAME}
+                    ssh -o StrictHostKeyChecking=no root@164.92.243.52 '
+                        docker ps -aq -f name=uzinterfax_web_2 | xargs -r docker stop || true
+                        docker ps -aq -f name=uzinterfax_web_2 | xargs -r docker rm || true
+                        docker pull uzinterfax_web
+                        docker run -d --name uzinterfax_web_2 -p 8000:8000 uzinterfax_web
                     '
                     '''
                 }
-            }
-        }
+
 
         stage('Clean Up') {
             steps {
