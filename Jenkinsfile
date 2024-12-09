@@ -100,19 +100,21 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
-            steps {
-                echo "Deploying to remote server..."
-                sh '''
-                ssh -i ${SSH_KEY_PATH} ${REMOTE_USER}@${DEPLOY_HOST} '
-                    docker stop ${CONTAINER_NAME} || true
-                    docker rm ${CONTAINER_NAME} || true
-                    docker pull ${IMAGE_NAME}
-                    docker run -d --name ${CONTAINER_NAME} -p 8000:8000 ${IMAGE_NAME}
-                '
-                '''
-            }
-        }
+             stage('Deploy') {
+         steps {
+             echo "Deploying to remote server..."
+             sshagent(['credentialID']) {
+                 sh '''
+                 ssh ${REMOTE_USER}@${DEPLOY_HOST} '
+                     docker stop ${CONTAINER_NAME} || true
+                     docker rm ${CONTAINER_NAME} || true
+                     docker pull ${IMAGE_NAME}
+                     docker run -d --name ${CONTAINER_NAME} -p 8000:8000 ${IMAGE_NAME}
+                 '
+                 '''
+             }
+         }
+     }
 
         stage('Clean Up') {
             steps {
