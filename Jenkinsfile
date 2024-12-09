@@ -22,9 +22,7 @@ pipeline {
                 sh '''
                 echo "Setting up virtual environment..."
                 python3 -m venv .venv
-                source .venv/bin/activate
-                pip install --upgrade pip
-                pip install -r requirements.txt
+                bash -c "source .venv/bin/activate && pip install --upgrade pip && pip install -r requirements.txt"
                 '''
             }
         }
@@ -33,8 +31,7 @@ pipeline {
             steps {
                 sh '''
                 echo "Running linting with pylint..."
-                source .venv/bin/activate
-                pylint --rcfile=.pylintrc main/ || true
+                bash -c "source .venv/bin/activate && pylint --rcfile=.pylintrc main/ || true"
                 '''
             }
         }
@@ -43,8 +40,7 @@ pipeline {
             steps {
                 sh '''
                 echo "Running security scan with bandit..."
-                source .venv/bin/activate
-                bandit -r main/
+                bash -c "source .venv/bin/activate && bandit -r main/"
                 '''
             }
         }
@@ -53,8 +49,7 @@ pipeline {
             steps {
                 sh '''
                 echo "Running tests with pytest..."
-                source .venv/bin/activate
-                pytest --cov=main
+                bash -c "source .venv/bin/activate && pytest --cov=main"
                 '''
             }
         }
@@ -103,7 +98,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo "Deploying to remote server..."
-                sshagent(['my-ssh-password']) { // Replace 'my-ssh-key' with your Credential ID
+                sshagent(['my-ssh-password']) { // Replace 'my-ssh-password' with your Credential ID
                     sh '''
                     ssh -tt -o StrictHostKeyChecking=no ${REMOTE_USER}@${DEPLOY_HOST} << EOF
                     docker ps -aq -f name=${CONTAINER_NAME} | xargs -r docker stop || true
