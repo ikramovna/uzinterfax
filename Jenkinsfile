@@ -5,6 +5,9 @@ pipeline {
         IMAGE_NAME = "uzinterfax_web"
         CONTAINER_NAME = "uzinterfax_web_1"
         APP_PORT = "8000"
+        DEPLOY_HOST = "164.92.243.52"
+        REMOTE_USER = "root"
+        SSH_KEY_PATH = "/path/to/your/private/key"
     }
 
     stages {
@@ -97,6 +100,20 @@ pipeline {
             }
         }
 
+        stage('Deploy') {
+            steps {
+                echo "Deploying to remote server..."
+                sh '''
+                ssh -i ${SSH_KEY_PATH} ${REMOTE_USER}@${DEPLOY_HOST} '
+                    docker stop ${CONTAINER_NAME} || true
+                    docker rm ${CONTAINER_NAME} || true
+                    docker pull ${IMAGE_NAME}
+                    docker run -d --name ${CONTAINER_NAME} -p 8000:8000 ${IMAGE_NAME}
+                '
+                '''
+            }
+        }
+
         stage('Clean Up') {
             steps {
                 sh '''
@@ -114,7 +131,7 @@ pipeline {
             cleanWs()
         }
         success {
-            echo 'Pipeline completed successfully: linting, security scan, build, tests, and static file collection!'
+            echo 'Pipeline completed successfully: linting, security scan, build, tests, static file collection, and deployment!'
         }
         failure {
             echo 'Pipeline failed. Check the logs for details.'
