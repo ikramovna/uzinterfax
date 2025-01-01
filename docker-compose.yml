@@ -11,12 +11,4 @@ services:
     ports:
       - "8000:8000"
     environment:
-      DEBUG: "1"  # Enable debugging mode
-    depends_on:
-      - redis
-
-  redis:
-    image: redis:alpine
-    container_name: redis
-    ports:
-      - "6379:6379"
+      DEBUG: "1"
