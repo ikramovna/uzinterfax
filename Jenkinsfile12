@@ -56,12 +56,28 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh '''
-                echo "Building Docker image..."
-                docker build -t ${IMAGE_NAME} .
-                '''
+                script {
+                    echo "Checking for existing Docker images with the same name..."
+                    // Search for existing images by name and remove them if found
+                    sh '''
+                    existing_image=$(docker images -q ${IMAGE_NAME})
+                    if [ -n "$existing_image" ]; then
+                        echo "Existing image found. Removing it..."
+                        docker rmi -f ${IMAGE_NAME}
+                    else
+                        echo "No existing image found."
+                    fi
+                    '''
+
+                    // Build the new Docker image
+                    sh '''
+                    echo "Building new Docker image..."
+                    docker build -t ${IMAGE_NAME} .
+                    '''
+                }
             }
         }
+
 
         stage('Run Docker Container') {
             steps {
@@ -97,19 +113,44 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                echo "Deploying to remote server..."
-                sshagent(['my-ssh-password']) { // Replace 'my-ssh-password' with your Credential ID
+                echo "Updating code and deploying application..."
+                sshagent(['uzinterfax-credentials']) {
                     sh '''
-                    ssh -tt -o StrictHostKeyChecking=no ${REMOTE_USER}@${DEPLOY_HOST} << EOF
-                    docker ps -aq -f name=${CONTAINER_NAME} | xargs -r docker stop || true
-                    docker ps -aq -f name=${CONTAINER_NAME} | xargs -r docker rm || true
-                    docker pull ${IMAGE_NAME}
-                    docker run -d --name ${CONTAINER_NAME} -p ${APP_PORT}:${APP_PORT} ${IMAGE_NAME}
+                    ssh -o StrictHostKeyChecking=no root@164.92.243.52 << EOF
+                    echo "Navigating to project directory..."
+                    cd /root/uzinterfax
+
+                    echo "Checking for local changes..."
+                    if [ -n "$(git status --porcelain)" ]; then
+                        echo "Stashing local changes..."
+                        git stash
+                    fi
+
+                    echo "Updating code from repository..."
+                    git pull origin main
+
+                    if [ -n "$(git stash list)" ]; then
+                        echo "Applying stashed changes..."
+                        git stash pop || true
+                    fi
+
+                    echo "Building Docker image..."
+                    docker build -t uzinterfax_web .
+
+                    echo "Stopping and removing existing container..."
+                    docker ps -aq -f name=uzinterfax_web_2 | xargs -r docker stop || true
+                    docker ps -aq -f name=uzinterfax_web_2 | xargs -r docker rm || true
+
+                    echo "Running new Docker container..."
+                    docker run -d --name uzinterfax_web_2 -p 8000:8000 uzinterfax_web
                     EOF
                     '''
                 }
             }
         }
+
+
+
 
         stage('Clean Up') {
             steps {
