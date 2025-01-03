@@ -36,8 +36,8 @@ class CategoryModelTest(TestCase):
         self.assertEqual(self.category.slug, "test-category")
 
     def test_slug_uniqueness(self):
-        CategoryModel.objects.create(name="Test Category")  # First instance
-        second_category = CategoryModel.objects.create(name="Test Category")  # Second instance
+        CategoryModel.objects.create(name="Test Category")
+        second_category = CategoryModel.objects.create(name="Test Category")
         self.assertNotEqual(self.category.slug, second_category.slug)
         self.assertTrue(second_category.slug.startswith("test-category-"))
 
@@ -66,8 +66,8 @@ class NewsModelTest(TestCase):
         self.assertEqual(self.news.slug, "test-news")
 
     def test_slug_uniqueness(self):
-        NewsModel.objects.create(title="Test News")  # First duplicate
-        second_news = NewsModel.objects.create(title="Test News")  # Second duplicate
+        NewsModel.objects.create(title="Test News")
+        second_news = NewsModel.objects.create(title="Test News")
         self.assertNotEqual(self.news.slug, second_news.slug)
         self.assertTrue(second_news.slug.startswith("test-news-"))
 
@@ -106,11 +106,11 @@ class TagModelTest(TestCase):
         self.assertEqual(self.tag.slug, "test-tag")
 
     def test_slug_uniqueness(self):
-        TagModel.objects.create(name="Test Tag")  # First duplicate
-        second_tag = TagModel.objects.create(name="Test Tag")  # Second duplicate
+        TagModel.objects.create(name="Test Tag")
+        second_tag = TagModel.objects.create(name="Test Tag")
         self.assertNotEqual(self.tag.slug, second_tag.slug)
         self.assertTrue(second_tag.slug.startswith("test-tag-"))
 
     def test_many_to_many_relationship(self):
-        self.assertIn(self.news, self.tag.news.all())  # Check that the news is linked to the tag
-        self.assertEqual(self.news.tags.first(), self.tag)  # Reverse relationship
+        self.assertIn(self.news, self.tag.news.all())
+        self.assertEqual(self.news.tags.first(), self.tag)

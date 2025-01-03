@@ -13,8 +13,8 @@ header {
   margin: 20px 0;
 }
 .logo img {
-  width: 75px;
-  height: 30px;
+  width: 190px;
+  height: 80px;
   margin-top: 0px;
 }
 ul {
@@ -311,9 +311,6 @@ ul li img {
   cursor: pointer;
 }
 
-a:hover, p:hover, h2:hover{
-  color: #001088;
-}
 
 .main-btn {
   border: 1px solid #17206A;

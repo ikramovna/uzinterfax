@@ -6,18 +6,15 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 
 class MainViewsTest(TestCase):
     def setUp(self):
-        # Create related models
         self.zone = ZoneModel.objects.create(name="Test Zone", slug="test-zone")
         self.category = CategoryModel.objects.create(name="Test Category", slug="test-category")
 
-        # Create a temporary image file for the NewsModel
         temp_image = SimpleUploadedFile(
             name='test_image.jpg',
             content=b'file_content',
             content_type='image/jpeg'
         )
 
-        # Create a NewsModel instance
         self.news = NewsModel.objects.create(
             title="Test News",
             short_description="Short description",
@@ -31,7 +28,6 @@ class MainViewsTest(TestCase):
             is_photo_news=True,
         )
 
-        # Create a TagModel instance and link it to the news
         self.tag = TagModel.objects.create(name="Test Tag", slug="test-tag")
         self.tag.news.add(self.news)
 
