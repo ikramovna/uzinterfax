@@ -6,7 +6,7 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
-# Copy only requirements first (better caching)
+# Copy requirements first (for caching)
 COPY requirements.txt /app/
 
 RUN apt-get update && apt-get install -y \
@@ -16,11 +16,11 @@ RUN apt-get update && apt-get install -y \
 
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
-# Now copy the rest of your Django code
+# Copy rest of the Django project
 COPY . /app
 
-# Expose port 8000 inside the container (for internal Docker networking)
+# Expose 8000 internally (not mandatory, but good practice)
 EXPOSE 8000
 
-# By default, run Gunicorn
+# Default command (Gunicorn)
 CMD ["gunicorn", "--bind", "0.0.0.0:8000", "root.wsgi"]

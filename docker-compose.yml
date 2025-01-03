@@ -5,11 +5,13 @@ services:
     build: .
     container_name: django
     command: gunicorn --bind 0.0.0.0:8000 root.wsgi
-    # We use 'expose' (internal) instead of 'ports' to avoid port conflicts
     expose:
-      - "8000"
+      - "8000"         # Only exposed to Docker network
     volumes:
-      - .:/app        # For local dev convenience (optional)
+      # Mount code for dev convenience (optional)
+      - .:/app
+      # Share static files with Nginx
+      - static_volume:/app/static
     depends_on:
       - db
 
@@ -26,11 +28,14 @@ services:
   nginx:
     build: ./nginx
     container_name: nginx
-    # Nginx listens on container port 80 -> host port 80
     ports:
-      - "80:80"
+      - "80:80"        # Publicly accessible on port 80
+    volumes:
+      # Share the same static folder so Nginx can serve it
+      - static_volume:/app/static
     depends_on:
       - django
 
 volumes:
   postgres_data:
+  static_volume:
