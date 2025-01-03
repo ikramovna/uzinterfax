@@ -1,17 +1,14 @@
-# Start from a lightweight Python image
+# Dockerfile for Django / Gunicorn
 FROM python:3.11-slim
 
-# Prevent Python from writing .pyc files and buffering
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
-# Set working directory inside the container
 WORKDIR /app
 
-# Copy requirements first (for better Docker caching)
+# Copy only requirements first (better caching)
 COPY requirements.txt /app/
 
-# Install system dependencies & Python deps
 RUN apt-get update && apt-get install -y \
     build-essential \
     libpq-dev \
@@ -19,11 +16,11 @@ RUN apt-get update && apt-get install -y \
 
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
-# Copy the rest of the project
+# Now copy the rest of your Django code
 COPY . /app
 
-# Expose the port Gunicorn will run on
+# Expose port 8000 inside the container (for internal Docker networking)
 EXPOSE 8000
 
-# Default command: run Gunicorn
+# By default, run Gunicorn
 CMD ["gunicorn", "--bind", "0.0.0.0:8000", "root.wsgi"]
