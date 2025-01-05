@@ -3,6 +3,8 @@ pipeline {
 
     environment {
         IMAGE_NAME = "uzinterfax_web"
+
+
         CONTAINER_NAME = "uzinterfax_web_2"
         APP_PORT = "8000"
         DEPLOY_HOST = "164.92.243.52"
