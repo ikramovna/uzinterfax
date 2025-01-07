@@ -15,7 +15,7 @@ services:
     image: postgres:14.0-alpine
     container_name: postgres_db
     environment:
-      - POSTGRES_DB=edu
+      - POSTGRES_DB=uzinterfax
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=1
     volumes:
@@ -32,3 +32,5 @@ services:
 volumes:
   postgres_data:
   static_volume:
+
+
