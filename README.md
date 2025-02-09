@@ -45,4 +45,36 @@ This project is developed using Python and Django Rest Freamwork. It includes va
 
 Zokirjonova Muslima 24835737
 
-# مسلمة زاكيرجونوفا
+### Project Overview
+
+This project is developed using Python and Django Rest Freamwork. It includes various functionalities such as database migrations, static file collection, and user management.
+
+### Home Page
+
+***
+![home.png](media/git/home.png)
+***
+
+### Categories Page
+
+***
+![category.png](media/git/category.png)
+***
+
+### Blog Page
+
+***
+![blog.png](media/git/blog.png)
+
+Blog Detail
+
+![blog_detail.png](media/git/blog_detail.png)
+***
+
+### Admin Page
+
+***
+![admin.png](media/git/admin.png)
+***
+
+
