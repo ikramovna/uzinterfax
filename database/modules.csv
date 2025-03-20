@@ -1,0 +1,52 @@
+mod_code,old_code,title,credits,level,semester,pre_requisite,module_leader
+CSY1061,CSY1014,Computer Systems,20,4,S1,none,Yinghui Zhang <Yinghui.Zhang@northampton.ac.uk>
+CSY1062,CSY1017,Computer Communications,20,4,S2,none,Noor Mohammedali <Noor.Mohammedali2@northampton.ac.uk>
+CSY1063,CSY1018,Web Development,20,4,S2,none,Chris Rafferty <Chris.Rafferty@northampton.ac.uk>
+CSY1064,CSY1019,Software Engineering Fundamentals,20,4,S1,none,Mark Johnson <Mark.Johnson@northampton.ac.uk>
+CSY1020,,Problem Solving & Programming,20,4,S1,none,Mohammed Bahja <Mohammed.Bahja@northampton.ac.uk>
+CSY1065,CSY1026,Database Fundamentals,20,4,S2,none,Mandy Morrell <Mandy.Morrell@northampton.ac.uk>
+CSY1030,,Digital Footprints,20,4,S2,none,Mandy Morrell <Mandy.Morrell@northampton.ac.uk>
+CSY1043,,Fundamentals of Computing Systems,20,4,S1,none,Michael Opoku Agyeman <Michael.OpokuAgyeman@northampton.ac.uk>
+CSY1060,,Mathematics for Computer Science,20,4,S2,none,Muawya Eldaw <Muawya.Eldaw@northampton.ac.uk>
+ENG1070,,Electronic Engineering Practice,20,4,unknown,none,Angel Torres Perez <Angel.TorresPerez@northampton.ac.uk>
+ENG1048,,Engineering Industry Practice,20,4,S1,none,Dan Bailey <Dan.Bailey@northampton.ac.uk>
+ENG1050,,Electrical and Electronic Principles,20,4,S1 and S2,none,Stephen Hillyard <Stephen.Hillyard@northampton.ac.uk>
+ENG1051,,Mathematics for Engineers,20,4,S1 and S2,none,Stephen Hillyard <Stephen.Hillyard@northampton.ac.uk>
+CSY2041,,Quality and User-centred Systems,20,5,S2,none,Mu Mu <Mu.Mu@northampton.ac.uk>
+CSY2042,,Website Management,20,5,S2,CSY1063,Muawya Eldaw <Muawya.Eldaw@northampton.ac.uk>
+CSY2043,,Website Design,20,5,S1,none,Muawya Eldaw <Muawya.Eldaw@northampton.ac.uk>
+CSY2086,CSY2001,Computer Networks,20,5,S1,CSY1062,Triantafyllos Kanakis <Triantafyllos.Kanakis@northampton.ac.uk>
+CSY2092,CSY2002,Operating Systems,20,5,S1,none,Ahmed Basil <Ahmed.Basil2@northampton.ac.uk>
+CSY2087,CSY2006,Data Structures and Algorithms,20,5,S2,none,Suraj Ajit <Suraj.Ajit@northampton.ac.uk>
+CSY2090,CSY2015,Microprocessors and Internet of Things ,20,5,S1,none,Michael Opoku Agyeman <Michael.OpokuAgyeman@northampton.ac.uk>
+CSY2088,CSY2027,Group Project,20,5,S2,none,Mark Johnson <Mark.Johnson@northampton.ac.uk>
+CSY2089,CSY2028,Web Programming,20,5,S1,CSY1063,Thomas Butler <Thomas.Butler@northampton.ac.uk>
+CSY2093,CSY2038,Object-relatunal Database,20,5,S1,CSY1065,Carole Morrell <Carole.Morrell@northampton.ac.uk>
+CSY2080,,Relational Databases,20,5,S1,none,Mandy Morrell <Mandy.Morrell@northampton.ac.uk>
+CSY2094,CSY2030,Software System Design and Development,20,5,S2,CSY1020,Anas Elhag <Anas.Elhag@northampton.ac.uk>
+CSY2091,CSY2061,Mobile Application Development,20,5,S2,none,Emmanuel Ofori-Attah <Emmanuel.Ofori-Attah@northampton.ac.uk>
+CSY2083,,Digital Communications,20,5,S1,none,Triantafyllos Kanakis <Triantafyllos.Kanakis@northampton.ac.uk>
+CSY2084,,Ethical Hacking & Penetration Testing ,20,5,S1,none,Amir Minai <Amir.Minai@northampton.ac.uk>
+CSY2085,,Server Administration and Security,20,5,S2,none,Thomas Butler <Thomas.Butler@northampton.ac.uk>
+CSY2081,,Cloud Computing and Big Data,20,5,S2,none,James Xue <James.Xue@northampton.ac.uk>
+CSY2082,,Introduction to Artificial Intelligence,20,5,S1,none,Mu Mu <Mu.Mu@northampton.ac.uk>
+ENG2065,,Electronics instrumentation and control systems,20,5,unknown,none,Huijuan Su <Huijuan.Su@northampton.ac.uk>
+ENG2045,,Advanced Mathematics for Engineers,20,5,unknown,ENG1051,Huijuan Su <Huijuan.Su@northampton.ac.uk>
+ENG2051,,Analogue and Digital Electronics,20,5,unknown,ENG1050,Angel Torres Perez <Angel.TorresPerez@northampton.ac.uk>
+CSY3034,,Business Intelligence,20,6,S1,none,Carole Morrell <Carole.Morrell@northampton.ac.uk>
+CSY3037,,IT Project Management,20,6,S2,none,Apkar Salatian <Apkar.Salatian@northampton.ac.uk>
+CSY3058,CSY3010,Media Technology,20,6,S1,none,Mu Mu <Mu.Mu@northampton.ac.uk>
+CSY3065,CSY3013,Contemporary Approaches to Software Development,20,6,S1,none,Mark Johnson <Mark.Johnson@northampton.ac.uk>
+CSY3064,CSY3015,Embedded Realtime Systems,20,6,unknown,CSY2090,Mohammed Al-Darkazali <Mohammed.Al-Darkazali2@northampton.ac.uk>
+CSY3061,CSY3021,Cloud and Advanced Network Technologies,20,6,S2,CSY2086,Triantafyllos Kanakis <Triantafyllos.Kanakis@northampton.ac.uk>
+CSY3062,CSY3023,Cyber Security and Applied Cryptography,20,6,S1,none,Amir Minai <Amir.Minai@northampton.ac.uk>
+CSY3059,CSY3024,Modern Databases,20,6,S2,none,James Xue <James.Xue@northampton.ac.uk>
+CSY3060,CSY3025,Advanced AI and Applications,20,6,S2,none,Mu Mu <Mu.Mu@northampton.ac.uk>
+CSY3063,CSY3029,Mobile Computing,20,6,S1,CSY2091,Emmanuel Ofori-Attah <Emmanuel.Ofori-Attah@northampton.ac.uk>
+CSY3055,,Natural Language Processing,20,6,S1,none,Mohammed Bahja <Mohammed.Bahja@northampton.ac.uk>
+CSY3056,,Development Operations and Software Testing ,20,6,S2,none,Mark Johnson <Mark.Johnson@northampton.ac.uk>
+CSY3057,,Cyber Security Management,20,6,S2,none,Amir Minai <Amir.Minai@northampton.ac.uk>
+ENG3020,,Advanced Electro-Mechanical Design,20,6,unknown,none,Angel Torres Perez <Angel.TorresPerez@northampton.ac.uk>
+ENG3022,,Advanced Digital Electronics,20,6,unknown,ENG2051,Angel Torres Perez <Angel.TorresPerez@northampton.ac.uk>
+ENG4004,,Engineering Project,40,6,unknown,none,Steve Mabbutt <Steve.Mabbutt@northampton.ac.uk>
+CSY4022,CSY4010,Computing Dissertation,40,6,S1 and S2,none,Amir Minai <Amir.Minai@northampton.ac.uk>
